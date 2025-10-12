@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masters of Literature</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Merriweather', serif;
+      background: url('https://www.transparenttextures.com/patterns/aged-paper.png'), #d4c19c;
+      background-size: cover;
+      color: #3e2c1c;
+      line-height: 1.7;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 25px 0 10px;
+      font-size: 2.8em;
+      color: #4b2e05;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      margin: 10px auto;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"], select {
+      padding: 10px 14px;
+      border: 1px solid #b89b6b;
+      border-radius: 6px;
+      font-family: 'Merriweather', serif;
+      background-color: #fdf6e3;
+      color: #4b2e05;
+      font-size: 1em;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    select:hover, input[type="text"]:hover {
+      background-color: #fff7d6;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .card {
+      background: rgba(255, 248, 220, 0.9);
+      border: 1px solid #b89b6b;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 2px solid #8b6f47;
+    }
+
+    h2 {
+      color: #5a3e1b;
+      font-size: 1.5em;
+      border-bottom: 1px solid #b89b6b;
+      padding-bottom: 5px;
+    }
+
+    p {
+      font-size: 0.95em;
+      margin: 10px 0;
+    }
+
+    .quote {
+      font-style: italic;
+      color: #704214;
+      background: rgba(222, 184, 135, 0.3);
+      padding: 8px 12px;
+      border-left: 4px solid #8b6f47;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Masters of Literature</h1>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Search author...">
+    <select id="sort">
+      <option value="default">Sort by</option>
+      <option value="az">A → Z</option>
+      <option value="za">Z → A</option>
+    </select>
+  </div>
+
+  <div class="container" id="author-container"></div>
+
+  <script>
+const authors = [
+  {
+    name: "Franz Kafka",
+    img: "images/kafkaimage.jpeg",
+    bio: "Czech novelist and short-story writer, widely regarded as one of the major figures of 20th-century literature.",
+    works: [
+      { title: "The Metamorphosis", link: "https://www.gutenberg.org/ebooks/5200" },
+      { title: "The Trial", link: "https://www.amazon.in/s?k=The+Trial+by+Kafka" },
+      { title: "The Castle", link: "https://www.flipkart.com/search?q=The+Castle+by+Kafka" }
+    ],
+    quote: "A book must be the axe for the frozen sea within us."
+  },
+  {
+    name: "Fyodor Dostoevsky",
+    img: "images/dostoevkyimage (2).jpeg",
+    bio: "Russian novelist and philosopher best known for exploring human psychology in the troubled political and social atmosphere of 19th-century Russia.",
+    works: [
+      { title: "Crime and Punishment", link: "https://www.gutenberg.org/ebooks/2554" },
+      { title: "The Brothers Karamazov", link: "https://www.gutenberg.org/ebooks/28054" },
+      { title: "Notes from Underground", link: "https://www.gutenberg.org/ebooks/600" }
+    ],
+    quote: "Pain and suffering are always inevitable for a large intelligence and a deep heart."
+  },
+  {
+    name: "Jane Austen",
+    img: "images/austenimage.jpeg",
+    bio: "English novelist known for her six major novels that interpret and critique the British landed gentry at the end of the 18th century.",
+    works: [
+      { title: "Pride and Prejudice", link: "https://www.gutenberg.org/ebooks/1342" },
+      { title: "Emma", link: "https://www.gutenberg.org/ebooks/158" },
+      { title: "Sense and Sensibility", link: "https://www.gutenberg.org/ebooks/161" }
+    ],
+    quote: "There is no charm equal to tenderness of heart."
+  },
+  {
+    name: "Leo Tolstoy",
+    img: "images/tolstoyimage.jpeg",
+    bio: "Russian writer regarded as one of the greatest authors of all time.",
+    works: [
+      { title: "War and Peace", link: "https://www.gutenberg.org/ebooks/2600" },
+      { title: "Anna Karenina", link: "https://www.gutenberg.org/ebooks/1399" },
+      { title: "The Death of Ivan Ilyich", link: "https://www.gutenberg.org/ebooks/219" }
+    ],
+    quote: "Everyone thinks of changing the world, but no one thinks of changing himself."
+  },
+  {
+    name: "Charles Dickens",
+    img: "images/dickensimage.jpeg",
+    bio: "English writer and social critic who created some of the world’s best-known fictional characters.",
+    works: [
+      { title: "Great Expectations", link: "https://www.gutenberg.org/ebooks/1400" },
+      { title: "Oliver Twist", link: "https://www.gutenberg.org/ebooks/730" },
+      { title: "A Tale of Two Cities", link: "https://www.gutenberg.org/ebooks/98" }
+    ],
+    quote: "It was the best of times, it was the worst of times."
+  },
+  {
+    name: "Virginia Woolf",
+    img: "images/woolfimage.jpeg",
+    bio: "English writer considered one of the most important modernist 20th-century authors and a pioneer in the use of stream of consciousness.",
+    works: [
+      { title: "Mrs Dalloway", link: "https://www.gutenberg.org/ebooks/1089" },
+      { title: "To the Lighthouse", link: "https://www.gutenberg.org/ebooks/144" },
+      { title: "A Room of One’s Own", link: "https://www.gutenberg.org/ebooks/15491" }
+    ],
+    quote: "Books are the mirrors of the soul."
+  },
+  {
+    name: "George Orwell",
+    img: "images/orwellimage.jpeg",
+    bio: "English novelist, essayist, journalist and critic, known for his lucid prose and opposition to totalitarianism.",
+    works: [
+      { title: "1984", link: "https://www.amazon.in/s?k=1984+George+Orwell" },
+      { title: "Animal Farm", link: "https://www.gutenberg.org/ebooks/1524" },
+      { title: "Homage to Catalonia", link: "https://www.amazon.in/s?k=Homage+to+Catalonia" }
+    ],
+    quote: "In a time of deceit, telling the truth is a revolutionary act."
+  },
+  {
+    name: "Gabriel García Márquez",
+    img: "images/garciaimage.jpeg",
+    bio: "Colombian novelist, short-story writer, and journalist, known for his magical realism style.",
+    works: [
+      { title: "One Hundred Years of Solitude", link: "https://www.amazon.in/s?k=One+Hundred+Years+of+Solitude" },
+      { title: "Love in the Time of Cholera", link: "https://www.amazon.in/s?k=Love+in+the+Time+of+Cholera" },
+      { title: "Chronicle of a Death Foretold", link: "https://www.amazon.in/s?k=Chronicle+of+a+Death+Foretold" }
+    ],
+    quote: "What matters in life is not what happens to you but what you remember and how you remember it."
+  },
+  {
+    name: "Ernest Hemingway",
+    img: "images/hemingwayimage.jpeg",
+    bio: "American novelist, short-story writer, and journalist, known for his economical and understated style.",
+    works: [
+      { title: "The Old Man and the Sea", link: "https://www.gutenberg.org/ebooks/67200" },
+      { title: "A Farewell to Arms", link: "https://www.amazon.in/s?k=A+Farewell+to+Arms" },
+      { title: "For Whom the Bell Tolls", link: "https://www.amazon.in/s?k=For+Whom+the+Bell+Tolls" }
+    ],
+    quote: "There is nothing noble in being superior to your fellow man; true nobility is being superior to your former self."
+  },
+  {
+    name: "Mary Shelley",
+    img: "images/maryshellyimage.jpeg",
+    bio: "English novelist who wrote the Gothic novel Frankenstein, one of the earliest examples of science fiction.",
+    works: [
+      { title: "Frankenstein", link: "https://www.gutenberg.org/ebooks/84" },
+      { title: "The Last Man", link: "https://www.gutenberg.org/ebooks/18247" },
+      { title: "Mathilda", link: "https://www.gutenberg.org/ebooks/15238" }
+    ],
+    quote: "Beware; for I am fearless, and therefore powerful."
+  }
+];
+
+const container = document.getElementById("author-container");
+const searchInput = document.getElementById("search");
+const sortSelect = document.getElementById("sort");
+
+function displayAuthors(list) {
+  container.innerHTML = "";
+  list.forEach(author => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${author.img}" alt="${author.name}">
+      <h2>${author.name}</h2>
+      <p><strong>Bio:</strong> ${author.bio}</p>
+      <p><strong>Major Works:</strong></p>
+      <ul>
+        ${author.works.map(w =>
+          `<li><a href="${w.link}" target="_blank" style="color:#3e2f1c;text-decoration:none;">📘 ${w.title}</a></li>`
+        ).join('')}
+      </ul>
+      <p class="quote">"${author.quote}"</p>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// 🔍 Search Function
+searchInput.addEventListener("input", () => {
+  const value = searchInput.value.toLowerCase();
+  const filtered = authors.filter(a => a.name.toLowerCase().includes(value));
+  displayAuthors(filtered);
+});
+
+// 🔤 Sort Function
+sortSelect.addEventListener("change", () => {
+  let sorted = [...authors];
+  if (sortSelect.value === "a-z") sorted.sort((a,b)=>a.name.localeCompare(b.name));
+  else if (sortSelect.value === "z-a") sorted.sort((a,b)=>b.name.localeCompare(a.name));
+  displayAuthors(sorted);
+});
+
+// Initial display
+displayAuthors(authors);
+</script>
